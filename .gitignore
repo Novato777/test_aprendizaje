@@ -1,0 +1,20 @@
+# Dependencias
+node_modules/
+
+# Base de datos local SQLite (si se usa persistencia en disco)
+data/*.db
+data/*.db-wal
+data/*.db-shm
+
+# Registros y logs
+logs/
+*.log
+npm-debug.log*
+
+# Archivos de entorno y temporales
+.env
+.env.local
+*.tmp
+*.pdf
+.DS_Store
+Thumbs.db
