@@ -182,7 +182,7 @@ function generateSessionReport(session, res) {
   const pillY = margin + 14;
   const isClosed = Boolean(session.isClosed);
   const pillBg = isClosed ? '#1E293B' : '#064E3B';
-  const pillText = isClosed ? 'Cerrada' : '● Activa';
+  const pillText = isClosed ? 'Cerrada' : 'Activa';
   const pillColor = isClosed ? '#CBD5E1' : '#34D399';
 
   doc.roundedRect(pillX, pillY, pillWidth, pillHeight, 11)

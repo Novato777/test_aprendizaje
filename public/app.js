@@ -662,9 +662,9 @@ async function initInstructorPanel() {
       const sessionState = document.getElementById('session-state');
       if (sessionState) sessionState.textContent = data.status;
 
-      // Enable/disable PDF buttons based on isClosed
-      if (downloadBtn) downloadBtn.disabled = !data.isClosed;
-      if (previewBtn) previewBtn.disabled = !data.isClosed;
+      // Keep PDF actions available in the active dashboard flow.
+      if (downloadBtn) downloadBtn.disabled = false;
+      if (previewBtn) previewBtn.disabled = false;
       if (closeBtn) closeBtn.disabled = Boolean(data.isClosed);
 
       const totalEl = document.getElementById('total-participants');

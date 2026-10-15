@@ -150,6 +150,7 @@ button, input, select, textarea {
   font-size: 1.15rem;
   letter-spacing: -0.02em;
   display: block;
+  white-space: nowrap;
 }
 
 .brand-subtitle {
@@ -163,6 +164,7 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 /* Layout Containers */
@@ -548,6 +550,7 @@ input::placeholder {
   transition: all var(--transition-fast);
   text-decoration: none;
   user-select: none;
+  white-space: nowrap;
 }
 
 .btn:active {
@@ -616,6 +619,7 @@ input::placeholder {
   padding: 8px 14px;
   font-size: 0.82rem;
   border-radius: var(--radius-sm);
+  white-space: nowrap;
 }
 
 /* Badges & Pills */
@@ -628,6 +632,8 @@ input::placeholder {
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .badge.active {
@@ -1637,48 +1643,189 @@ tbody tr:hover {
   .share-link-card {
     flex-direction: column;
     align-items: stretch;
-    padding: 18px 16px;
+    justify-content: flex-start;
+    padding: 16px;
+    gap: 12px;
+    margin-bottom: 20px;
+    height: auto;
+    min-height: auto;
+    max-width: 100%;
   }
 
   .share-info {
+    flex: 0 0 auto;
     width: 100%;
-    align-items: flex-start;
+    align-items: center;
+    gap: 12px;
+    height: auto;
+    min-height: auto;
+    margin-bottom: 0;
+  }
+
+  .share-icon-wrap {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: var(--radius-md);
+  }
+
+  .share-icon-wrap svg {
+    width: 18px;
+    height: 18px;
   }
 
   .share-text {
+    flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+  }
+
+  .share-text h3 {
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0;
+    color: var(--text-main);
+  }
+
+  .share-text p {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 100%;
   }
 
   .share-action-group {
-    flex-direction: column;
-    align-items: stretch;
+    flex: 0 0 auto;
     width: 100%;
     max-width: 100%;
-    padding: 10px 12px;
+    height: auto;
+    min-height: auto;
+    padding: 5px 6px 5px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid #bfdbfe;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xs);
+    box-sizing: border-box;
+    margin-top: 0;
   }
 
   .share-url-text {
-    max-width: 100%;
-    width: 100%;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    text-overflow: clip;
+    display: block;
+    font-family: monospace;
+    font-size: 0.82rem;
+    color: #1e3a8a;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .share-action-group .btn {
+    flex-shrink: 0;
+    width: auto;
+    justify-content: center;
+    white-space: nowrap;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-top: 0;
+    border-radius: var(--radius-sm);
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .table-wrap {
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   table {
     width: 100%;
+    min-width: 0;
     table-layout: fixed;
   }
 
-  th, td {
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  tbody td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: none;
     white-space: normal;
     word-break: break-word;
     overflow-wrap: anywhere;
+  }
+
+  tbody td:nth-child(1),
+  tbody td:nth-child(3),
+  tbody td:nth-child(4),
+  tbody td:nth-child(5),
+  tbody td:nth-child(7),
+  th:nth-child(1),
+  th:nth-child(3),
+  th:nth-child(4),
+  th:nth-child(5),
+  th:nth-child(7) {
+    display: none;
+  }
+
+  tbody td:nth-child(2) {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+  }
+
+  tbody td:nth-child(6) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+
+  .student-name-cell {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .student-name-cell span {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .badge-style {
+    font-size: 0.7rem;
+    padding: 5px 8px;
+    white-space: nowrap;
   }
 
   .dashboard-actions-bar {
@@ -1727,15 +1874,61 @@ tbody tr:hover {
 
 @media (max-width: 480px) {
   .nav-container {
-    padding: 10px 16px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .brand-link {
+    gap: 8px;
+    flex-shrink: 0;
+    min-width: 0;
+  }
+
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 8px;
+  }
+
+  .brand-logo svg {
+    width: 17px;
+    height: 17px;
   }
 
   .brand-title {
-    font-size: 1.05rem;
+    font-size: 0.92rem;
+    white-space: nowrap;
   }
 
   .brand-subtitle {
     display: none;
+  }
+
+  .header-badges {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .header-badges .btn {
+    white-space: nowrap;
+    padding: 5px 9px;
+    font-size: 0.76rem;
+    gap: 4px;
+    min-height: 30px;
+    border-radius: 7px;
+  }
+
+  .header-badges .btn svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .header-badges .badge {
+    white-space: nowrap;
+    padding: 3px 8px;
+    font-size: 0.72rem;
+    gap: 4px;
   }
 
   .welcome-hero {
