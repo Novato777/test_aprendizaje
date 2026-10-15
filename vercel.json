@@ -1,10 +1,7 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/s/:slug", "destination": "/session.html" },
-    { "source": "/panel/:slug", "destination": "/instructor.html" },
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/panel/:slug", "destination": "/instructor.html" }
   ]
 }
