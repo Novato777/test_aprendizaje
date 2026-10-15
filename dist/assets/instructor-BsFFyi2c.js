@@ -1,0 +1,1 @@
+import{t as e}from"./app-igs_0m9q.js";e();

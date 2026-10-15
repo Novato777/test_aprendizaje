@@ -117,9 +117,9 @@ function hideAlert(element) {
 
 function getSessionSlugFromPath() {
   const path = window.location.pathname;
-  const match = path.match(/\/s\/(.+)|\/panel\/(.+)/);
+  const match = path.match(/\/(?:s|panel)\/([^/?#]+)/);
   if (!match) return null;
-  return match[1] || match[2] || null;
+  return match[1].trim().replace(/\/+$/, '');
 }
 
 async function fetchJson(url, options = {}) {
@@ -385,7 +385,11 @@ async function initStudentPage() {
 
             const result = await fetchJson(`/api/students/${response.student.id}/submit`, {
               method: 'POST',
-              body: JSON.stringify({ answers: answerList })
+              body: JSON.stringify({
+                answers: answerList,
+                name: response.student.name,
+                slug: data.slug
+              })
             });
 
             const summary = result.result;
@@ -648,9 +652,10 @@ async function initInstructorPanel() {
       if (grpEl) grpEl.textContent = data.groupNumber;
 
       const linkEl = document.getElementById('panel-link');
+      const cleanShareUrl = `${window.location.origin}/s/${slug}`;
       if (linkEl) {
-        linkEl.textContent = data.shareUrl;
-        linkEl.href = data.shareUrl;
+        linkEl.textContent = cleanShareUrl;
+        linkEl.href = cleanShareUrl;
       }
 
       const statusBadge = document.getElementById('panel-status');
@@ -706,17 +711,14 @@ async function initInstructorPanel() {
   // Copy share URL button
   if (copyBtn) {
     copyBtn.addEventListener('click', async () => {
-      const linkEl = document.getElementById('panel-link');
-      const urlToCopy = linkEl ? linkEl.href : '';
-      if (!urlToCopy) return;
-
+      const cleanShareUrl = `${window.location.origin}/s/${slug}`;
       try {
-        await navigator.clipboard.writeText(urlToCopy);
+        await navigator.clipboard.writeText(cleanShareUrl);
         showToast('¡Enlace copiado al portapapeles!', 'success');
       } catch (err) {
         // Fallback
         const tempInput = document.createElement('input');
-        tempInput.value = urlToCopy;
+        tempInput.value = cleanShareUrl;
         document.body.appendChild(tempInput);
         tempInput.select();
         document.execCommand('copy');
@@ -782,7 +784,12 @@ async function initInstructorPanel() {
     try {
       const response = await fetch(`/api/sessions/${slug}/report`);
       if (!response.ok) {
-        throw new Error('No se pudo generar el documento PDF.');
+        let errorMsg = 'No se pudo generar el documento PDF.';
+        try {
+          const errData = await response.json();
+          if (errData.error) errorMsg = errData.error;
+        } catch (_) {}
+        throw new Error(errorMsg);
       }
 
       const blob = await response.blob();
@@ -790,8 +797,12 @@ async function initInstructorPanel() {
       const link = document.createElement('a');
       link.href = url;
       link.download = `Reporte_VAK_${slug}.pdf`;
+      document.body.appendChild(link);
       link.click();
-      window.URL.revokeObjectURL(url);
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 200);
       showToast('¡Reporte PDF descargado exitosamente!', 'success');
     } catch (error) {
       showToast(error.message, 'error');

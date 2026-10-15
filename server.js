@@ -12,10 +12,16 @@ const {
   listStudents
 } = require('./src/db');
 const { QUESTIONS } = require('./src/questions');
-const { generateSessionReport } = require('./src/pdfReport');
+const { generateSessionReport, generateSessionReportBuffer } = require('./src/pdfReport');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+function getBaseUrl(req) {
+  const proto = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+  const host = req.get('host') || `localhost:${PORT}`;
+  return `${proto}://${host}`;
+}
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,7 +42,7 @@ app.post('/api/sessions', (req, res) => {
   }
 
   const session = createSession({ instructorName, programName, groupNumber });
-  const shareUrl = `http://localhost:${PORT}/s/${session.slug}`;
+  const shareUrl = `${getBaseUrl(req)}/s/${session.slug}`;
 
   return res.status(201).json({
     ...session,
@@ -53,7 +59,7 @@ app.get('/api/sessions/:slug', (req, res) => {
 
   return res.json({
     ...session,
-    shareUrl: `http://localhost:${PORT}/s/${session.slug}`,
+    shareUrl: `${getBaseUrl(req)}/s/${session.slug}`,
     status: session.isClosed ? 'Cerrada' : 'Activa'
   });
 });
@@ -109,7 +115,7 @@ app.post('/api/students', (req, res) => {
     return res.status(403).json({ error: 'La encuesta ya está cerrada. No se aceptan nuevos registros.' });
   }
 
-  const student = createStudent({ sessionId: session.id, name });
+  const student = createStudent({ sessionId: session.id, name, slug: session.slug });
   return res.status(201).json({
     student,
     session: {
@@ -155,7 +161,13 @@ app.post('/api/students/:id/submit', (req, res) => {
   }
 
   try {
-    const result = submitStudentAnswers({ studentId, answers });
+    const { name, slug } = req.body || {};
+    const result = submitStudentAnswers({
+      studentId,
+      answers,
+      studentName: name || student.name,
+      slug: slug || session.slug
+    });
     return res.json({
       message: 'Resultados enviados correctamente.',
       result,
@@ -170,7 +182,7 @@ app.post('/api/students/:id/submit', (req, res) => {
   }
 });
 
-app.get('/api/sessions/:slug/report', (req, res) => {
+app.get('/api/sessions/:slug/report', async (req, res) => {
   const session = getSessionBySlug(req.params.slug);
   if (!session) {
     return res.status(404).json({ error: 'La sesión no existe.' });
@@ -181,14 +193,15 @@ app.get('/api/sessions/:slug/report', (req, res) => {
   const cleanGroup = (session.groupNumber || '').replace(/[^\w-]/g, '_');
   const filename = `Reporte_VAK_${cleanInstructor}_${cleanGroup}.pdf`;
 
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader(
-    'Content-Disposition',
-    `${isPreview ? 'inline' : 'attachment'}; filename="${filename}"`
-  );
-
   try {
-    generateSessionReport(session, res);
+    const pdfBuffer = await generateSessionReportBuffer(session);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Length', pdfBuffer.length);
+    res.setHeader(
+      'Content-Disposition',
+      `${isPreview ? 'inline' : 'attachment'}; filename="${encodeURIComponent(filename)}"`
+    );
+    return res.end(pdfBuffer);
   } catch (err) {
     console.error('Error generando reporte PDF:', err);
     if (!res.headersSent) {

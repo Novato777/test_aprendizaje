@@ -115,3 +115,27 @@ test('POST /api/students rechaza nombres vacíos o con sólo espacios', async ()
   const payload = JSON.parse(res.body);
   assert.match(payload.error, /nombre|obligatorio|vacio|espacios/i);
 });
+
+test('getSessionBySlug auto-recupera la sesión si el store está vacío en serverless (auto-healing)', () => {
+  const { createSession, getSessionBySlug } = require('../src/db');
+  const session = createSession({
+    instructorName: 'Prof. Laura',
+    programName: 'Diseño Gráfico',
+    groupNumber: 'D1'
+  });
+
+  assert.ok(session.slug.startsWith('sess-'));
+
+  // Simulate wiped store / fresh serverless instance
+  const storePath = require('path').join(__dirname, '..', 'data', 'app-store.json');
+  const fs = require('fs');
+  fs.writeFileSync(storePath, JSON.stringify({ nextSessionId: 100, nextStudentId: 100, sessions: [], students: [] }, null, 2));
+
+  // getSessionBySlug should self-heal and recover the session
+  const recovered = getSessionBySlug(session.slug);
+  assert.ok(recovered, 'La sesión debe ser auto-recuperada sin error 404');
+  assert.equal(recovered.instructorName, 'Prof. Laura');
+  assert.equal(recovered.programName, 'Diseño Gráfico');
+  assert.equal(recovered.groupNumber, 'D1');
+});
+

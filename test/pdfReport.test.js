@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { Writable } = require('node:stream');
-const { calculateGroupStats, formatPredominantLabel, generateSessionReport } = require('../src/pdfReport');
+const { calculateGroupStats, formatPredominantLabel, generateSessionReport, generateSessionReportBuffer } = require('../src/pdfReport');
 
 test('calculateGroupStats calcula promedios y estilos correctamente con datos vacíos', () => {
   const stats = calculateGroupStats([]);
@@ -74,3 +74,19 @@ test('generateSessionReport genera un flujo PDF válido sin errores', async () =
   assert.ok(buffer.length > 500, 'El PDF debe tener un tamaño razonable');
   assert.equal(buffer.subarray(0, 4).toString(), '%PDF');
 });
+
+test('generateSessionReportBuffer genera un Buffer con encabezado %PDF-', async () => {
+  const mockSession = {
+    instructorName: 'Prof. Carlos',
+    programName: 'Biología',
+    groupNumber: 'Grupo 10',
+    isClosed: false,
+    students: []
+  };
+
+  const buffer = await generateSessionReportBuffer(mockSession);
+  assert.ok(Buffer.isBuffer(buffer), 'Debe ser un Buffer');
+  assert.ok(buffer.length > 500, 'El buffer debe contener el PDF');
+  assert.equal(buffer.subarray(0, 4).toString(), '%PDF');
+});
+

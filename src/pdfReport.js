@@ -116,26 +116,11 @@ function formatPredominantLabel(styles) {
 }
 
 /**
- * Generate a high-end, editorial PDF report for a session
+ * Render the full editorial PDF report body into a PDFKit document
+ * @param {PDFDocument} doc - PDFDocument instance
  * @param {Object} session - Session object with students
- * @param {Stream.Writable} res - Output writable stream (HTTP response or file stream)
  */
-function generateSessionReport(session, res) {
-  const doc = new PDFDocument({
-    size: 'A4',
-    margins: { top: 36, bottom: 44, left: 36, right: 36 },
-    bufferPages: true,
-    info: {
-      Title: `Reporte VAK - ${session.programName} - Grupo ${session.groupNumber}`,
-      Author: session.instructorName,
-      Subject: 'Reporte de Estilos de Aprendizaje (Modelo VAK)',
-      Keywords: 'VAK, Estilos de Aprendizaje, Evaluación, Educación',
-      CreationDate: new Date()
-    }
-  });
-
-  doc.pipe(res);
-
+function renderReportContent(doc, session) {
   const stats = calculateGroupStats(session.students || []);
 
   const pageWidth = 595.28;
@@ -502,12 +487,67 @@ function generateSessionReport(session, res) {
          lineBreak: false
        });
   }
+}
 
+/**
+ * Generate report piped to an output writable stream (Express response)
+ */
+function generateSessionReport(session, res) {
+  const doc = new PDFDocument({
+    size: 'A4',
+    margins: { top: 36, bottom: 44, left: 36, right: 36 },
+    bufferPages: true,
+    info: {
+      Title: `Reporte VAK - ${session?.programName || ''} - Grupo ${session?.groupNumber || ''}`,
+      Author: session?.instructorName || 'Instructor',
+      Subject: 'Reporte de Estilos de Aprendizaje (Modelo VAK)',
+      Keywords: 'VAK, Estilos de Aprendizaje, Evaluación, Educación',
+      CreationDate: new Date()
+    }
+  });
+
+  doc.pipe(res);
+  ensureStandardFonts(doc);
+  renderReportContent(doc, session || {});
   doc.end();
+}
+
+/**
+ * Generate full report as a Buffer promise (ideal for Vercel Serverless Functions)
+ */
+function generateSessionReportBuffer(session) {
+  return new Promise((resolve, reject) => {
+    try {
+      const doc = new PDFDocument({
+        size: 'A4',
+        margins: { top: 36, bottom: 44, left: 36, right: 36 },
+        bufferPages: true,
+        info: {
+          Title: `Reporte VAK - ${session?.programName || ''} - Grupo ${session?.groupNumber || ''}`,
+          Author: session?.instructorName || 'Instructor',
+          Subject: 'Reporte de Estilos de Aprendizaje (Modelo VAK)',
+          Keywords: 'VAK, Estilos de Aprendizaje, Evaluación, Educación',
+          CreationDate: new Date()
+        }
+      });
+
+      const chunks = [];
+      doc.on('data', chunk => chunks.push(chunk));
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+
+      ensureStandardFonts(doc);
+      renderReportContent(doc, session || {});
+      doc.end();
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
 
 module.exports = {
   generateSessionReport,
+  generateSessionReportBuffer,
   calculateGroupStats,
   formatPredominantLabel
 };
