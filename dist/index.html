@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plataforma VAK • Evaluación de Estilos de Aprendizaje</title>
+    <meta name="description" content="Sistema profesional para la evaluación de estilos de aprendizaje mediante el modelo VAK (Visual, Auditivo y Cinestésico) con exportación de reportes ejecutivos en PDF." />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon-CnTX7yRf.svg" />
+    <script type="module" crossorigin src="/assets/main-Bis_7VTV.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/app-B8qhiKxE.js">
+    <link rel="stylesheet" crossorigin href="/assets/app-BqLjsxDk.css">
+  </head>
+  <body data-page="instructor">
+    <!-- Header / Navbar -->
+    <header class="app-header">
+      <div class="nav-container">
+        <a href="/" class="brand-link">
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <div>
+            <span class="brand-title">Plataforma VAK</span>
+            <span class="brand-subtitle">Diagnóstico Pedagógico</span>
+          </div>
+        </a>
+        <div class="header-badges">
+          <span class="badge active">Sistema Activo</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="landing-shell">
+      <!-- Hero Section -->
+      <section class="welcome-hero" aria-labelledby="hero-title">
+        <div class="welcome-copy">
+          <span class="eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            Modelo Neurocognitivo VAK
+          </span>
+          <h1 id="hero-title">
+            Diagnóstico Integral de <span class="gradient-text">Estilos de Aprendizaje</span>
+          </h1>
+          <p class="welcome-text">
+            Evalúa con precisión los canales de percepción sensorial (Visual, Auditivo y Cinestésico) de tus estudiantes. Recopila resultados en tiempo real y exporta reportes ejecutivos en PDF de calidad editorial.
+          </p>
+
+          <div class="hero-features" role="list">
+            <span class="hero-feature-chip" role="listitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              40 reactivos psicométricos
+            </span>
+            <span class="hero-feature-chip" role="listitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Panel en vivo con auto-actualización
+            </span>
+            <span class="hero-feature-chip" role="listitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Reportes PDF ejecutivos A4
+            </span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#session-module" class="btn btn-primary btn-lg">
+              <span>Crear Nueva Sesión</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="welcome-visual" aria-hidden="true">
+          <div class="visual-canvas">
+            <div class="showcase-header">
+              <span class="showcase-badge">Distribución de Canales</span>
+              <span class="badge-style visual">40 Preguntas</span>
+            </div>
+
+            <div class="showcase-bars">
+              <div class="showcase-bar-item">
+                <div class="showcase-bar-label">
+                  <span>Visual (V)</span>
+                  <strong>42.5%</strong>
+                </div>
+                <div class="showcase-track">
+                  <div class="showcase-fill visual"></div>
+                </div>
+              </div>
+
+              <div class="showcase-bar-item">
+                <div class="showcase-bar-label">
+                  <span>Auditivo (A)</span>
+                  <strong>35.0%</strong>
+                </div>
+                <div class="showcase-track">
+                  <div class="showcase-fill auditory"></div>
+                </div>
+              </div>
+
+              <div class="showcase-bar-item">
+                <div class="showcase-bar-label">
+                  <span>Cinestésico (K)</span>
+                  <strong>22.5%</strong>
+                </div>
+                <div class="showcase-track">
+                  <div class="showcase-fill kinesthetic"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="showcase-footer">
+              <span>Estilo Dominante:</span>
+              <strong>Visual • Aprendizaje Gráfico</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Session Creation Module -->
+      <section id="session-module" class="card" aria-labelledby="creator-title">
+        <div class="section-head">
+          <h2 id="creator-title" class="section-title">Configuración de la Sesión</h2>
+          <p class="section-subtitle">Completa los datos del curso para generar el enlace que compartirás con tus estudiantes.</p>
+        </div>
+
+        <div class="session-creator-grid">
+          <form id="session-form" class="form-grid" novalidate>
+            <div class="field">
+              <label for="instructorName">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Nombre del instructor o evaluador
+              </label>
+              <div class="input-wrap">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+                </div>
+                <input id="instructorName" name="instructorName" type="text" placeholder="Ej. Dra. Carmen Mendoza" required />
+              </div>
+              <span class="field-hint">Aparecerá en el encabezado oficial del reporte PDF.</span>
+            </div>
+
+            <div class="field">
+              <label for="programName">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Programa académico o asignatura
+              </label>
+              <div class="input-wrap">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+                </div>
+                <input id="programName" name="programName" type="text" placeholder="Ej. Análisis y Desarrollo de Software" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="groupNumber">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Código de grupo o ficha
+              </label>
+              <div class="input-wrap">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+                </div>
+                <input id="groupNumber" name="groupNumber" type="text" placeholder="Ej. Ficha 2824901 - Grupo A" required />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" id="create-session-btn" class="btn btn-primary btn-lg" style="width: 100%;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                <span>Generar Sesión y Abrir Panel</span>
+              </button>
+            </div>
+
+            <div id="session-alert" class="alert" aria-live="polite"></div>
+          </form>
+
+          <aside class="creator-sidebar" aria-label="Información complementaria">
+            <div class="feature-box">
+              <div class="feature-icon-bubble blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="feature-content">
+                <h4>Reporte Ejecutivo en PDF</h4>
+                <p>Genera automáticamente un documento formal con métricas grupales, recomendaciones pedagógicas y tabla detallada de estudiantes.</p>
+              </div>
+            </div>
+
+            <div class="feature-box">
+              <div class="feature-icon-bubble green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="feature-content">
+                <h4>Monitoreo en Tiempo Real</h4>
+                <p>Observa el progreso de los participantes a medida que van respondiendo el cuestionario sin necesidad de recargar la página.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div>Plataforma de Diagnóstico Pedagógico VAK • Modelo de Canales de Aprendizaje</div>
+    </footer>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  </body>
+</html>

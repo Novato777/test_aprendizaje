@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Control del Instructor • Plataforma VAK</title>
+    <meta name="description" content="Panel de control en tiempo real para instructores: monitoreo de evaluaciones VAK y generación de reportes ejecutivos en PDF." />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon-CnTX7yRf.svg" />
+    <script type="module" crossorigin src="/assets/instructor-Bis_7VTV.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/app-B8qhiKxE.js">
+    <link rel="stylesheet" crossorigin href="/assets/app-BqLjsxDk.css">
+  </head>
+  <body data-page="instructor-panel">
+    <!-- Header / Navbar -->
+    <header class="app-header">
+      <div class="nav-container">
+        <a href="/" class="brand-link">
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <div>
+            <span class="brand-title">Plataforma VAK</span>
+            <span class="brand-subtitle">Panel del Instructor</span>
+          </div>
+        </a>
+        <div class="header-badges">
+          <a href="/" class="btn btn-ghost btn-sm" title="Crear nueva sesión">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            <span>Nueva Sesión</span>
+          </a>
+          <span id="panel-status" class="badge active">Activa</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Session Header & Status -->
+      <section class="card" style="margin-bottom: 24px;">
+        <div class="dashboard-topbar">
+          <div class="dashboard-title-group">
+            <h1 id="panel-title">Cargando sesión…</h1>
+            <div class="dashboard-meta">
+              <span class="dashboard-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span id="panel-program">--</span>
+              </span>
+              <span>•</span>
+              <span class="dashboard-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                Grupo: <strong id="panel-group">--</strong>
+              </span>
+            </div>
+            <!-- Keep hidden fallback for panel-subtitle compatibility -->
+            <p id="panel-subtitle" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Share Link Box -->
+        <div class="share-link-card">
+          <div class="share-info">
+            <div class="share-icon-wrap" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </div>
+            <div class="share-text">
+              <h3>Enlace de Registro para Estudiantes</h3>
+              <p>Comparte esta dirección con tu clase para que completen la prueba de 40 preguntas.</p>
+            </div>
+          </div>
+
+          <div class="share-action-group">
+            <a id="panel-link" href="#" target="_blank" class="share-url-text">Cargando enlace…</a>
+            <button id="copy-link-btn" type="button" class="btn btn-secondary btn-sm" title="Copiar enlace">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Copiar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dashboard Actions Toolbar -->
+        <div class="dashboard-actions-bar">
+          <div class="action-buttons">
+            <button id="close-session-btn" type="button" class="btn btn-danger">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Cerrar Encuesta</span>
+            </button>
+            <button id="preview-pdf-btn" type="button" class="btn btn-secondary" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Vista Previa PDF</span>
+            </button>
+            <button id="download-pdf-btn" type="button" class="btn btn-primary" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Descargar PDF</span>
+            </button>
+            <button id="reset-session-btn" type="button" class="btn btn-ghost" title="Limpiar los participantes y habilitar la encuesta nuevamente">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              <span>Reiniciar Encuesta</span>
+            </button>
+          </div>
+
+          <div id="session-hint" class="field-hint">
+            * El reporte PDF se habilita cuando la encuesta es cerrada.
+          </div>
+        </div>
+
+        <div id="panel-alert" class="alert" aria-live="polite"></div>
+
+        <!-- KPI Metrics Grid -->
+        <div class="summary-grid">
+          <div class="metric-card primary">
+            <div class="metric-header">
+              <span class="metric-title">Total Participantes</span>
+              <svg width="18" height="18" class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <span id="total-participants" class="metric-value">0</span>
+            <span class="metric-sub" id="completed-count-text">0 completados</span>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-title">Estado de la Sesión</span>
+              <svg width="18" height="18" class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span id="session-state" class="metric-value" style="font-size: 1.6rem;">Activa</span>
+            <span class="metric-sub">Recepción de respuestas</span>
+          </div>
+
+          <div class="metric-card visual">
+            <div class="metric-header">
+              <span class="metric-title">Promedio Visual</span>
+              <span class="badge-style visual">V</span>
+            </div>
+            <span id="avg-visual" class="metric-value">0%</span>
+            <span class="metric-sub">Ponderación grupal</span>
+          </div>
+
+          <div class="metric-card auditory">
+            <div class="metric-header">
+              <span class="metric-title">Promedio Auditivo</span>
+              <span class="badge-style auditory">A</span>
+            </div>
+            <span id="avg-auditory" class="metric-value">0%</span>
+            <span class="metric-sub">Ponderación grupal</span>
+          </div>
+
+          <div class="metric-card kinesthetic">
+            <div class="metric-header">
+              <span class="metric-title">Promedio Cinestésico</span>
+              <span class="badge-style kinesthetic">K</span>
+            </div>
+            <span id="avg-kinesthetic" class="metric-value">0%</span>
+            <span class="metric-sub">Ponderación grupal</span>
+          </div>
+        </div>
+
+        <!-- Student Table Section -->
+        <div class="table-section">
+          <div class="table-toolbar">
+            <div class="table-title-group">
+              <h3>Participantes Evaluados</h3>
+              <p>Lista en tiempo real de estudiantes y resultados del test</p>
+            </div>
+            <div class="table-search">
+              <input id="students-search" type="search" placeholder="Buscar por nombre…" aria-label="Buscar estudiante" />
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>Nombre del Estudiante</th>
+                  <th style="width: 140px;">Visual</th>
+                  <th style="width: 140px;">Auditivo</th>
+                  <th style="width: 140px;">Cinestésico</th>
+                  <th>Estilo Predominante</th>
+                  <th style="width: 100px;">Estado</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                <tr class="empty-state-row">
+                  <td colspan="7">
+                    <div class="empty-state-wrap">
+                      <div class="empty-icon-bubble">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                      </div>
+                      <strong>Todavía no hay participantes registrados</strong>
+                      <p>Comparte el enlace con tu grupo para comenzar a recibir las respuestas.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdf-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h3 id="modal-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Vista Previa del Reporte Ejecutivo PDF
+          </h3>
+          <div class="modal-actions">
+            <button id="modal-download-btn" type="button" class="btn btn-primary btn-sm">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Descargar</span>
+            </button>
+            <button id="modal-close-btn" type="button" class="btn btn-ghost btn-sm" aria-label="Cerrar vista previa">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <iframe id="modal-pdf-iframe" class="modal-iframe" title="Visor de PDF"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <footer class="app-footer">
+      <div>Plataforma VAK • Sistema de Diagnóstico Psicopedagógico de Canales de Aprendizaje</div>
+    </footer>
+
+  </body>
+</html>
