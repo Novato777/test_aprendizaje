@@ -17,6 +17,10 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
+function normalizeText(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
 function readBody(req) {
   return new Promise((resolve) => {
     let body = '';
@@ -54,10 +58,12 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'POST' && pathname === '/api/sessions') {
     const body = await readBody(req);
-    const { instructorName, programName, groupNumber } = body || {};
+    const instructorName = normalizeText(body?.instructorName);
+    const programName = normalizeText(body?.programName);
+    const groupNumber = normalizeText(body?.groupNumber);
 
     if (!instructorName || !programName || !groupNumber) {
-      return sendJson(res, 400, { error: 'Todos los campos del instructor son obligatorios.' });
+      return sendJson(res, 400, { error: 'Todos los campos del instructor son obligatorios y no pueden quedar vacíos.' });
     }
 
     const session = createSession({ instructorName, programName, groupNumber });
@@ -127,10 +133,11 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'POST' && pathname === '/api/students') {
     const body = await readBody(req);
-    const { slug, name } = body || {};
+    const slug = normalizeText(body?.slug);
+    const name = normalizeText(body?.name);
 
     if (!slug || !name) {
-      return sendJson(res, 400, { error: 'Se requiere el slug de la sesión y el nombre del estudiante.' });
+      return sendJson(res, 400, { error: 'Se requiere un slug de sesión válido y un nombre de estudiante no vacío.' });
     }
 
     const session = getSessionBySlug(slug);

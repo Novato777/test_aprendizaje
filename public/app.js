@@ -128,10 +128,21 @@ async function fetchJson(url, options = {}) {
     ...options
   });
 
-  const data = await response.json();
+  const rawText = await response.text();
+  let data = {};
+
+  if (rawText) {
+    try {
+      data = JSON.parse(rawText);
+    } catch (_error) {
+      data = { error: rawText.slice(0, 180) };
+    }
+  }
+
   if (!response.ok) {
     throw new Error(data.error || 'Ocurrió un error en el servidor.');
   }
+
   return data;
 }
 
