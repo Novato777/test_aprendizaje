@@ -12,6 +12,7 @@ const {
   listStudents
 } = require('./src/db');
 const { QUESTIONS } = require('./src/questions');
+const { generateSessionReport } = require('./src/pdfReport');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -153,19 +154,21 @@ app.post('/api/students/:id/submit', (req, res) => {
     });
   }
 
-  const result = submitStudentAnswers({ studentId, answers });
-  return res.json({
-    message: 'Resultados enviados correctamente.',
-    result,
-    student: {
-      id: student.id,
-      name: student.name,
-      completed: true
-    }
-  });
+  try {
+    const result = submitStudentAnswers({ studentId, answers });
+    return res.json({
+      message: 'Resultados enviados correctamente.',
+      result,
+      student: {
+        id: student.id,
+        name: student.name,
+        completed: true
+      }
+    });
+  } catch (err) {
+    return res.status(400).json({ error: err.message || 'Error al procesar respuestas.' });
+  }
 });
-
-const { generateSessionReport } = require('./src/pdfReport');
 
 app.get('/api/sessions/:slug/report', (req, res) => {
   const session = getSessionBySlug(req.params.slug);
@@ -184,7 +187,14 @@ app.get('/api/sessions/:slug/report', (req, res) => {
     `${isPreview ? 'inline' : 'attachment'}; filename="${filename}"`
   );
 
-  generateSessionReport(session, res);
+  try {
+    generateSessionReport(session, res);
+  } catch (err) {
+    console.error('Error generando reporte PDF:', err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'No se pudo generar el documento PDF.' });
+    }
+  }
 });
 
 app.get('/', (_req, res) => {
@@ -197,6 +207,19 @@ app.get('/s/:slug', (_req, res) => {
 
 app.get('/panel/:slug', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'instructor.html'));
+});
+
+// 404 Fallback
+app.use((_req, res) => {
+  res.status(404).sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// 500 Global Error Handler
+app.use((err, _req, res, _next) => {
+  console.error('Error no controlado:', err);
+  if (!res.headersSent) {
+    res.status(500).json({ error: 'Ocurrió un error interno en el servidor.' });
+  }
 });
 
 app.listen(PORT, () => {

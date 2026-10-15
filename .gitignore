@@ -1,20 +1,42 @@
 # Dependencias
 node_modules/
+.pnp
+.pnp.js
 
-# Base de datos local SQLite (si se usa persistencia en disco)
+# Base de datos local SQLite (si se activa persistencia en disco)
 data/*.db
 data/*.db-wal
 data/*.db-shm
 
-# Registros y logs
+# Registros y logs de depuración
 logs/
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Archivos de entorno y temporales
+# Entornos y secretos
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos del sistema operativo y editores
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos temporales y reportes de prueba
 *.tmp
 *.pdf
-.DS_Store
-Thumbs.db
+.system_generated/
