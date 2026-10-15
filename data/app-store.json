@@ -1,0 +1,16 @@
+{
+  "nextSessionId": 2,
+  "nextStudentId": 2,
+  "sessions": [
+    {
+      "id": 1,
+      "slug": "sess-test",
+      "instructorName": "Ana",
+      "programName": "Matemáticas",
+      "groupNumber": "A1",
+      "isClosed": false,
+      "students": []
+    }
+  ],
+  "students": []
+}
