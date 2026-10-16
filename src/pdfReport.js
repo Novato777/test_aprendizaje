@@ -1,14 +1,31 @@
 const PDFDocument = require('pdfkit');
 
-// Ensure standard fonts are available in Vercel Serverless environments.
-// PDFKit includes built‑in fonts (Helvetica, Times‑Roman, Courier, …).
-// When the function is bundled, the font data lives in
-// `node_modules/pdfkit/js/standard-fonts/`. The Vercel includeFiles rule now
-// ships those files, so we only need a no‑op helper that can be called safely.
+// ---------------------------------------------------------------------------
+// VERCEL / ncc FONT PRE-LOADING
+// ---------------------------------------------------------------------------
+// Vercel bundles serverless functions with `ncc`, which cannot statically
+// analyze PDFKit's dynamic require() calls (template literals). As a result,
+// the standard font .cjs files are excluded from the bundle, causing:
+//   "Cannot find module '.../standard-fonts/Helvetica.cjs'"
+//
+// Fix: explicitly require each font module here so ncc includes them in the
+// bundle and they are cached in the module registry before PDFKit needs them.
+// ---------------------------------------------------------------------------
+(function preloadPdfkitFonts() {
+  const stdFonts = [
+    'Helvetica', 'Helvetica-Bold', 'Helvetica-Oblique', 'Helvetica-BoldOblique',
+    'Courier', 'Courier-Bold', 'Courier-Oblique', 'Courier-BoldOblique',
+    'Times-Roman', 'Times-Bold', 'Times-Italic', 'Times-BoldItalic',
+    'Symbol', 'ZapfDingbats'
+  ];
+  stdFonts.forEach(function (name) {
+    try { require('pdfkit/js/standard-fonts/' + name); } catch (_) {}
+  });
+})();
+
 function ensureStandardFonts(_doc) {
-  // No operation needed – the fonts are already bundled.
-  // This placeholder exists so that calls to `ensureStandardFonts(doc)`
-  // do not throw a ReferenceError in production.
+  // Fonts are pre-loaded above via explicit requires; this helper is a no-op
+  // kept for call-site compatibility.
 }
 
 const { CATEGORY_LABELS } = require('./logic');
