@@ -1,4 +1,16 @@
 const PDFDocument = require('pdfkit');
+
+// Ensure standard fonts are available in Vercel Serverless environments.
+// PDFKit includes built‑in fonts (Helvetica, Times‑Roman, Courier, …).
+// When the function is bundled, the font data lives in
+// `node_modules/pdfkit/js/standard-fonts/`. The Vercel includeFiles rule now
+// ships those files, so we only need a no‑op helper that can be called safely.
+function ensureStandardFonts(_doc) {
+  // No operation needed – the fonts are already bundled.
+  // This placeholder exists so that calls to `ensureStandardFonts(doc)`
+  // do not throw a ReferenceError in production.
+}
+
 const { CATEGORY_LABELS } = require('./logic');
 
 /**
